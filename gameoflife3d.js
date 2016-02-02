@@ -1,4 +1,4 @@
-var worldSize = 10;
+var worldSize = 30;
 var cells = seed();
 
 function seed() {
@@ -8,7 +8,7 @@ function seed() {
 	for (var i = 0; i < worldSize; i++) {
 		for (var j = 0; j < worldSize; j++) {
 			for (var k = 0; k < worldSize; k++) {
-				if (Math.random() < 0.3) aisle.push(1);
+				if (Math.random() < 0.2) aisle.push(1);
 				else aisle.push(0);
 			}
 			column.push(aisle);
@@ -59,14 +59,14 @@ function wrap(n) {
 
 function isItAlive(population, cell) {
 	if (population === 5) return 1;
-	if (population === 4) return cell;
+	if (population === 6) return cell;
 	return 0;
 }
 
 setInterval(function() {
 	cells = nextGen(cells);
 	console.log(nextGen(cells));
-}, 1000);
+}, 30);
 
 
 
