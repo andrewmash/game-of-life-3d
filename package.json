@@ -1,0 +1,14 @@
+{
+  "name": "gameoflife3d",
+  "version": "1.0.0",
+  "description": "3d game of life!",
+  "main": "gameoflife3d.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew Ash",
+  "license": "ISC",
+  "dependencies": {
+    "three": "^0.73.2"
+  }
+}
