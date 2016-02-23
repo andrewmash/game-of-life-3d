@@ -1,4 +1,4 @@
-var game = (function() {
+ var game = (function() {
 
 	var worldSize = 30;
 	var world = [];
