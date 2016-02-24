@@ -77,12 +77,6 @@
 // 	};
 // })();
 
-module.exports = {
-	world: world,
-	seed: seed,
-	nextGen: nextGen
-};
-
 // var output = "";
 // seed();
 // world.forEach(function(column) {

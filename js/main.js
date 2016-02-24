@@ -1,6 +1,5 @@
 var scene, camera, renderer;
 var voxelSize = 50;
-var game = require('gameoflife3d');
 
 init();
 animate();
@@ -10,11 +9,11 @@ function init() {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.z = 1000;
+    camera.position.set(250, 250, 1000);
 
-    game.seed();
+    seed();
 
-    game.world.forEach(function(column) {
+    world.forEach(function(column) {
         column.forEach(function(aisle) {
             aisle.forEach(function(cell) {
                 draw(cell);
@@ -63,8 +62,8 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-    	game.world = game.nextGen();
-    	game.world.forEach(function(column) {
+    	nextGen();
+    	world.forEach(function(column) {
 	        column.forEach(function(aisle) {
 	            aisle.forEach(function(cell) {
 	                redraw(cell);
@@ -73,7 +72,6 @@ function animate() {
 	    });
     
 
-    scene.rotation.x += 0.01;
 
     // mesh.rotation.x += 0.01;
     // mesh.rotation.y += 0.02;
