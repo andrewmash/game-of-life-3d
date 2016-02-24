@@ -1,4 +1,4 @@
-var scene, camera, renderer;
+var scene, camera, controls, renderer;
 var voxelSize = 50;
 
 init();
@@ -11,6 +11,9 @@ function init() {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.set(250, 250, 1000);
 
+    controls = new THREE.OrbitControls( camera );
+  	controls.addEventListener( 'change', render );
+
     seed();
 
     world.forEach(function(column) {
@@ -21,11 +24,12 @@ function init() {
         });
     });
 
-    // geometry = new THREE.BoxGeometry(200, 200, 200);
-    // material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var centerCoord = Math.ceil(worldSize / 2);
 
-    // mesh = new THREE.Mesh(geometry, material);
-    // scene.add(mesh);
+    var centerCell = scene.getObjectByName(centerCoord + '' + centerCoord + centerCoord);
+	var bb = new THREE.Box3();
+	bb.setFromObject(centerCell);
+	bb.center(controls.target);
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -70,11 +74,28 @@ function animate() {
 	            });
 	        });
 	    });
-    
 
+	controls.update();
 
     // mesh.rotation.x += 0.01;
     // mesh.rotation.y += 0.02;
 
     renderer.render(scene, camera);
+}
+
+function onWindowResize() {
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize( window.innerWidth, window.innerHeight );
+
+  render();
+
+}
+
+function render() {
+
+  renderer.render( scene, camera );
+
 }
