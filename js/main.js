@@ -1,6 +1,9 @@
 var scene, camera, controls, renderer;
 var voxelSize = 50;
 var frame = 0;
+var voxels = [];
+var voxelsColumn = [];
+var voxelsAisle = [];
 
 init();
 animate();
@@ -10,7 +13,7 @@ function init() {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.set(0, 0, 750);
+    camera.position.set(0, 0, 1500);
 
     controls = new THREE.OrbitControls( camera );
   	controls.addEventListener( 'change', render );
@@ -24,12 +27,16 @@ function init() {
             aisle.forEach(function(cell) {
                 draw(cell);
             });
+            voxelsColumn.push(voxelsAisle);
+            voxelsAisle = [];
         });
+        voxels.push(voxelsColumn);
+        voxelsColumn = [];
     });
 
     var centerCoord = Math.ceil(worldSize / 2);
 
-    var centerCell = scene.getObjectByName(centerCoord + '' + centerCoord + centerCoord);
+    var centerCell = voxels[centerCoord][centerCoord][centerCoord];
 	var bb = new THREE.Box3();
 	bb.setFromObject(centerCell);
 	bb.center(controls.target);
@@ -46,7 +53,7 @@ function init() {
 
 function draw (cell) {
 
-    var geometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize);
+    var geometry = new THREE.SphereGeometry(voxelSize, 20, 10);
     var material = new THREE.MeshLambertMaterial({ color: 0x40FF7D });
     material.transparent = true;
     material.opacity = 1;
@@ -55,7 +62,7 @@ function draw (cell) {
 
     var mesh = new THREE.Mesh(geometry, material);
 
-    mesh.name = cell.row + '' + cell.column + cell.aisle;
+    voxelsAisle.push(mesh);
 
     scene.add(mesh);
     mesh.position.set(cell.row * voxelSize, cell.column * voxelSize, cell.aisle * voxelSize);
@@ -63,7 +70,7 @@ function draw (cell) {
 }
 
 function redraw (cell) {
-	var mesh = scene.getObjectByName(cell.row + '' + cell.column + cell.aisle);
+	var mesh = voxels[cell.row][cell.column][cell.aisle];
 	if (cell.alive) {
 		mesh.material.visible = true;
 	}
