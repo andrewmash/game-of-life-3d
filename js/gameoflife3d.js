@@ -51,7 +51,8 @@
 		for (var i = rowIndex - 1; i <= rowIndex + 1; i++) {
 			for (var j = columnIndex - 1; j <= columnIndex + 1; j++) {
 				for (var k = aisleIndex - 1; k <= aisleIndex + 1; k++) {
-					if (world[wrap(i)][wrap(j)][wrap(k)].alive) population++;
+					if (world[wrap(i)][wrap(j)][wrap(k)].alive && 
+						!(i === rowIndex && j === columnIndex && k === aisleIndex)) population++;
 				}
 			}
 		}
@@ -65,43 +66,25 @@
 	}
 
 	function isItAlive(population, cell) {
+		// Ruleset 4555
+		if (population === 4) return cell.alive;
 		if (population === 5) return true;
-		if (population === 6) return cell.alive;
 		return false;
+
+		// Ruleset 5766
+		// if (population === 5 || population === 7) return cell.alive;
+		// if (population === 6) return true;
+		// return false;
+
+		// Ruleset 10 21 10 21
+		// if (population >= 10 && population <= 21) return true;
+		// return false;
+
+		// Ruleset 4526
+		// if (population >= 4 && population <= 5) return cell.alive;
+		// if (population >= 2 && population <= 6) return true;
+		// return false;
 	}
-
-// 	return {
-// 		world: world,
-// 		nextGen: nextGen,
-// 		seed: seed
-// 	};
-// })();
-
-// var output = "";
-// seed();
-// world.forEach(function(column) {
-//     column.forEach(function(aisle) {
-//         aisle.forEach(function(cell) {
-//             output += cell.row + "" + cell.column + cell.aisle + " " + cell.alive + ".";
-//         });
-//     });
-// });
-// console.log(output);
-// console.log("end");
-// setInterval(function() {
-// 	output = "";
-// 	nextGen();
-// 	world.forEach(function(column) {
-//         column.forEach(function(aisle) {
-//             aisle.forEach(function(cell) {
-//                 output += cell.row + "" + cell.column + cell.aisle + " " + cell.alive + ".";
-//             });
-//         });
-//     });
-//     console.log(output);
-// 	console.log("end");
-// }, 1000);
-
 
 
 

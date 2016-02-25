@@ -1,5 +1,6 @@
 var scene, camera, controls, renderer;
 var voxelSize = 50;
+var frame = 0;
 
 init();
 animate();
@@ -9,10 +10,12 @@ function init() {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.set(250, 250, 1000);
+    camera.position.set(0, 0, 750);
 
     controls = new THREE.OrbitControls( camera );
   	controls.addEventListener( 'change', render );
+
+  	addLights();
 
     seed();
 
@@ -31,8 +34,11 @@ function init() {
 	bb.setFromObject(centerCell);
 	bb.center(controls.target);
 
-    renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer({alpha: true});
+    renderer.setClearColor(0x303F9F, 1);
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMapSoft = true;
 
     document.body.appendChild(renderer.domElement);
 
@@ -40,12 +46,12 @@ function init() {
 
 function draw (cell) {
 
-    var geometry = new THREE.SphereGeometry(voxelSize / 3);
-    var material = new THREE.MeshBasicMaterial({ color: 0x000099 });
-    // material.transparent = true;
+    var geometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize);
+    var material = new THREE.MeshLambertMaterial({ color: 0x40FF7D });
+    material.transparent = true;
+    material.opacity = 1;
 
-    if (cell.alive) material.color.setHex(0x00FF00);
-    // else material.opacity = 0x000000; 
+    if (!cell.alive) material.visible = false;
 
     var mesh = new THREE.Mesh(geometry, material);
 
@@ -58,29 +64,33 @@ function draw (cell) {
 
 function redraw (cell) {
 	var mesh = scene.getObjectByName(cell.row + '' + cell.column + cell.aisle);
-	if (cell.alive) mesh.material.color.setHex(0x00FF00);
-	else mesh.material.color.setHex(0x000099);
+	if (cell.alive) {
+		mesh.material.visible = true;
+	}
+	else mesh.material.visible = false;
 }
 
 function animate() {
 
     requestAnimationFrame(animate);
 
-    	nextGen();
-    	world.forEach(function(column) {
+    frame++;
+
+    if (frame % 10 === 0) {
+		nextGen();
+		world.forEach(function(column) {
 	        column.forEach(function(aisle) {
 	            aisle.forEach(function(cell) {
 	                redraw(cell);
 	            });
 	        });
 	    });
+	}
 
 	controls.update();
 
-    // mesh.rotation.x += 0.01;
-    // mesh.rotation.y += 0.02;
-
     renderer.render(scene, camera);
+
 }
 
 function onWindowResize() {
@@ -92,6 +102,21 @@ function onWindowResize() {
 
   render();
 
+}
+
+function addLights() {
+  var light = new THREE.DirectionalLight( 0xffffff, 1 );
+  light.position.set( -55, 10, 40 );
+  scene.add( light );
+  light = new THREE.DirectionalLight( 0xffffff, 1 );
+  light.position.set( 55, -55, 55 );
+  scene.add( light );
+  light = new THREE.DirectionalLight( 0xffffff, 1 );
+  light.position.set( 50, 50, 0 );
+  scene.add( light );
+  light = new THREE.DirectionalLight( 0xffffff, 0.4 );
+  light.position.set( 0, 10, 0 );
+  scene.add( light );
 }
 
 function render() {
