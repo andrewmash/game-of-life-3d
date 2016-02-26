@@ -1,6 +1,6 @@
  //var game = (function() {
 
-	var worldSize = 15;
+	var worldSize = 18;
 	var world = [];
 
 	function Cell(row, column, aisle, alive) {
