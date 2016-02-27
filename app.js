@@ -12,6 +12,6 @@ router.get('/', function(req, res, next) {
 
 module.exports = app;
 
-app.listen(1337, function() {
-  console.log("\nListening on port 1337");
+app.listen(process.env.PORT, function() {
+  console.log("\nListening on a very special port");
 });
