@@ -4,6 +4,8 @@
   "description": "3d game of life!",
   "main": "gameoflife3d.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "author": "Andrew Ash",
   "license": "ISC",
